@@ -9,3 +9,100 @@ Idée d'algo :
 - Remplissage :: Tirer pour chaque axe /x/ et /y/ une valeur aléatoire
   entre $0 + r$ et $c - r$. Tester une possible intersection avec
   chacun des autres disques, recommencer si intersection.
+
+* Prototype
+  :PROPERTIES:
+  :header-args: :comments both :padline yes :session disks
+  :END:
+
+
+#+begin_src python
+  import cairo
+  from IPython.display import Image, display
+
+  from math import pi
+  from io import BytesIO
+
+  def disp(draw_func):
+      c, n, r = 1000, 20, 50
+      surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, c, c)
+      ctx = cairo.Context(surface)
+      draw_func(ctx, c, n, r)
+      with BytesIO() as fileobj:
+          surface.write_to_png(fileobj)
+          display(Image(fileobj.getvalue(), width=c))
+#+end_src
+
+#+RESULTS:
+
+** Dessiner un disque
+
+#+begin_src python
+  def circle_path(cr: cairo.Context, x: int, y: int, r: float) -> cairo.Context:
+      # draw cricle
+      cr.arc(x, y, r, 0, 2 * pi)
+      cr.close_path()
+      return cr
+#+end_src
+
+#+RESULTS:
+
+#+begin_src python :results drawer
+  @disp
+  def draw(cr: cairo.Context, c: int, n: int, r: float) -> None:
+      cr.scale(c, c)
+      cr = circle_path(cr, x=0.5, y=0.5, r=0.5)
+      cr.fill()
+#+end_src
+
+#+RESULTS:
+:RESULTS:
+#+attr_org: :width 1000
+[[file:./.ob-jupyter/8b396e5f328af06981b758da3f9ea7b7ef47bb19.png]]
+:END:
+
+
+** Générer une liste de disques
+
+#+begin_src python
+  from typing import List, Tuple
+  from random import randint
+  from math import pi, sqrt
+
+  def intersection(a: Tuple[int, int], b: Tuple[int, int], r: float) -> bool:
+      (xa, ya), (xb, yb) = a, b
+      return sqrt((xa - xb)**2 + (ya - yb)**2) <= 2 * r
+
+  def random_disks(c: int, n: int, r: float) -> List[Tuple[int, int]]:
+      a, b = 0 + round(r), round(c - r)
+      l: List[Tuple[int, int]] = []
+      while len(l) < n:
+          t = (randint(a, b), randint(a, b))
+
+          if any([intersection(t, o, r) for o in l]):
+              continue
+
+          l += [t]
+      return l
+#+end_src
+
+#+RESULTS:
+
+
+** Dessiner la liste des disques
+
+#+begin_src python
+  @disp
+  def draw(cr: cairo.Context, c: int, n: int, r: float) -> None:
+      l = random_disks(c, n, r)
+
+      for (x, y) in l:
+          cr.arc(x, y, r, 0, 2 * pi)
+          cr.fill()
+#+end_src
+
+#+RESULTS:
+:RESULTS:
+#+attr_org: :width 1000
+[[file:./.ob-jupyter/cd1dc34c29aa0dbca135ed484cd72be16e2c3405.png]]
+:END:
