@@ -1,7 +1,7 @@
 * Description du projet
 
-On veut générer une image carrée de coté **c**, contenant **n**
-disques de même diamètre **d** (ou un rayon **r**), diposés aléatoirement dans l'espace
+On veut générer une image carrée de coté *c*, contenant *n*
+disques de même diamètre *d* (ou un rayon *r*), diposés aléatoirement dans l'espace
 libre. Les disques ne doivent pas avoir d'intersection commune.
 
 Idée d'algo :
