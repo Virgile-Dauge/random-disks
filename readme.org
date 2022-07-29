@@ -32,7 +32,7 @@ Idée d'algo :
 #+begin_src python :tangle disks.py
   import cairo
   import argparse
-  import uuid
+  import secrets
 
   from typing import List, Tuple
   from random import randint
@@ -128,7 +128,6 @@ Idée d'algo :
 [[file:./.ob-jupyter/0dc640e38e57f2614c23d2b23f3c03089cb243d1.png]]
 :END:
 
-
 * Script
   :PROPERTIES:
   :header-args: :comments both :padline yes :tangle disks.py
@@ -136,7 +135,7 @@ Idée d'algo :
 ** Génération d'un nom de fichier
 #+begin_src python
   def filenamer(p: int, d: float, n: int, ext: str='svg') -> str:
-      return f"disks_p{p}_n{n}_d{d}_{str(uuid.uuid4().hex)}.{ext}"
+      return f"disks_p{p}_n{n}_d{d}_{secrets.token_urlsafe(3)}.{ext}"
 
 #+end_src
 

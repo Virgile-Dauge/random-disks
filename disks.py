@@ -3,7 +3,7 @@
 # [[file:readme.org::*Dépendances][Dépendances:1]]
 import cairo
 import argparse
-import uuid
+import secrets
 
 from typing import List, Tuple
 from random import randint
@@ -35,7 +35,7 @@ def random_disks(c: int, n: int, r: float) -> List[Tuple[int, int]]:
 
 # [[file:readme.org::*Génération d'un nom de fichier][Génération d'un nom de fichier:1]]
 def filenamer(p: int, d: float, n: int, ext: str='svg') -> str:
-    return f"disks_p{p}_n{n}_d{d}_{str(uuid.uuid4().hex)}.{ext}"
+    return f"disks_p{p}_n{n}_d{d}_{secrets.token_urlsafe(3)}.{ext}"
 # Génération d'un nom de fichier:1 ends here
 
 # Parser les options
