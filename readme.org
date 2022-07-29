@@ -4,24 +4,47 @@ On veut générer une image carrée de coté *c*, contenant *n*
 disques de même diamètre *d* (ou un rayon *r*), diposés aléatoirement dans l'espace
 libre. Les disques ne doivent pas avoir d'intersection commune.
 
-[[res.png]]
 Idée d'algo :
 - Initialisation :: Générer un espace vide de **c** par **c** pixels
 - Remplissage :: Tirer pour chaque axe /x/ et /y/ une valeur aléatoire
   entre $0 + r$ et $c - r$. Tester une possible intersection avec
   chacun des autres disques, recommencer si intersection.
 
+  #+begin_src bash :results raw
+    python disks.py --help
+  #+end_src
+
+  #+RESULTS:
+  usage: disks.py [-h] [--t T] --p P --d D --n N
+
+  options:
+    -h, --help          show this help message and exit
+    --t T, -tirages T   Combien d'images faut-il générer ?
+    --p P, -pixels P    La taille d'un coté de l'image en pixels
+    --d D, -diametre D  Le diamètre en pixels des disques
+    --n N, -disques N   Combien de disques faut il générer par image ?
+
 * Prototype
   :PROPERTIES:
   :header-args: :comments both :padline yes :session disks
   :END:
-
-
-#+begin_src python
+** Dépendances
+#+begin_src python :tangle disks.py
   import cairo
-  from IPython.display import Image, display
+  import argparse
+  import uuid
 
-  from math import pi
+  from typing import List, Tuple
+  from random import randint
+  from math import pi, sqrt
+
+#+end_src
+
+#+RESULTS:
+** Affichage de l'image résultante dans emacs
+#+begin_src python
+
+  from IPython.display import Image, display
   from io import BytesIO
 
   def disp(draw_func):
@@ -65,10 +88,7 @@ Idée d'algo :
 
 ** Générer une liste de disques
 
-#+begin_src python
-  from typing import List, Tuple
-  from random import randint
-  from math import pi, sqrt
+#+begin_src python :tangle disks.py
 
   def intersection(a: Tuple[int, int], b: Tuple[int, int], r: float) -> bool:
       (xa, ya), (xb, yb) = a, b
@@ -105,5 +125,58 @@ Idée d'algo :
 #+RESULTS:
 :RESULTS:
 #+attr_org: :width 1000
-[[file:./.ob-jupyter/19fb40aaad54936209ee4ae432ec8971e72642da.png]]
+[[file:./.ob-jupyter/0dc640e38e57f2614c23d2b23f3c03089cb243d1.png]]
 :END:
+
+
+* Script
+  :PROPERTIES:
+  :header-args: :comments both :padline yes :tangle disks.py
+  :END:
+** Génération d'un nom de fichier
+#+begin_src python
+  def filenamer(p: int, d: float, n: int, ext: str='svg') -> str:
+      return f"disks_p{p}_n{n}_d{d}_{str(uuid.uuid4().hex)}.{ext}"
+
+#+end_src
+
+** Parser les options
+#+begin_src python
+  def options() -> Tuple[int, int, int, int]:
+      parser = argparse.ArgumentParser()
+      parser.add_argument('--t', '-tirages', type=int, default=1,
+                          help="Combien d'images faut-il générer ?")
+      parser.add_argument('--p', '-pixels', type=int, required=True,
+                          help="La taille d'un coté de l'image en pixels")
+      parser.add_argument('--d', '-diametre', type=int, required=True,
+                          help="Le diamètre en pixels des disques")
+      parser.add_argument('--n', '-disques', type=int, required=True,
+                          help="Combien de disques faut il générer par image ?")
+      args = parser.parse_args()
+      return args.t, args.p, args.d, args.n
+
+
+#+end_src
+
+** Fonction principale
+#+begin_src python
+  def main():
+      t, p, d, n = options()
+
+      for _ in range(t):
+          with cairo.SVGSurface(filenamer(p, d, n), p, p) as surface:
+              l = random_disks(p, n, d/2)
+
+              cr = cairo.Context(surface)
+              for (x, y) in l:
+                  cr.arc(x, y, d/2, 0, 2 * pi)
+                  cr.fill()
+              ...
+#+end_src
+
+
+
+#+begin_src python :tangle disks.py
+  if __name__=='__main__':
+      main()
+#+end_src
