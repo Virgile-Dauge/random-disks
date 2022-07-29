@@ -1,20 +1,22 @@
 * Description du projet
 
-On veut générer une image carrée de coté *c*, contenant *n*
-disques de même diamètre *d* (ou un rayon *r*), diposés aléatoirement dans l'espace
-libre. Les disques ne doivent pas avoir d'intersection commune.
+On veut générer une image carrée *p* pixels de coté, contenant *n*
+disques de même diamètre *d* (ou un rayon *r*), diposés aléatoirement
+dans l'espace libre. Les disques ne doivent pas avoir d'intersection
+commune.
 
 Idée d'algo :
-- Initialisation :: Générer un espace vide de **c** par **c** pixels
+- Initialisation :: Générer un espace vide de *p* par *p* pixels
 - Remplissage :: Tirer pour chaque axe /x/ et /y/ une valeur aléatoire
   entre $0 + r$ et $c - r$. Tester une possible intersection avec
   chacun des autres disques, recommencer si intersection.
 
-  #+begin_src bash :results raw
+  #+begin_src bash :results drawer
     python disks.py --help
   #+end_src
 
   #+RESULTS:
+  :results:
   usage: disks.py [-h] [--t T] --p P --d D --n N
 
   options:
@@ -23,7 +25,7 @@ Idée d'algo :
     --p P, -pixels P    La taille d'un coté de l'image en pixels
     --d D, -diametre D  Le diamètre en pixels des disques
     --n N, -disques N   Combien de disques faut il générer par image ?
-
+  :end:
 * Prototype
   :PROPERTIES:
   :header-args: :comments both :padline yes :session disks
