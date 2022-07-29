@@ -11,21 +11,19 @@ Idée d'algo :
   entre $0 + r$ et $c - r$. Tester une possible intersection avec
   chacun des autres disques, recommencer si intersection.
 
-  #+begin_src bash :results drawer
+  #+begin_src bash :results verbatim
     python disks.py --help
   #+end_src
 
   #+RESULTS:
-  :results:
-  usage: disks.py [-h] [--t T] --p P --d D --n N
-
-  options:
-    -h, --help          show this help message and exit
-    --t T, -tirages T   Combien d'images faut-il générer ?
-    --p P, -pixels P    La taille d'un coté de l'image en pixels
-    --d D, -diametre D  Le diamètre en pixels des disques
-    --n N, -disques N   Combien de disques faut il générer par image ?
-  :end:
+  : usage: disks.py [-h] [--t T] --p P --d D --n N
+  :
+  : options:
+  :   -h, --help          show this help message and exit
+  :   --t T, -tirages T   Combien d'images faut-il générer ?
+  :   --p P, -pixels P    La taille d'un coté de l'image en pixels
+  :   --d D, -diametre D  Le diamètre en pixels des disques
+  :   --n N, -disques N   Combien de disques faut il générer par image ?
 * Prototype
   :PROPERTIES:
   :header-args: :comments both :padline yes :session disks
